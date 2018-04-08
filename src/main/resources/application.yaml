@@ -1,0 +1,25 @@
+
+feeds:
+  - url: http://example.com/feed8
+    regexp:
+      - matcher: match1
+        exclude: exclude1
+        download_path: /home/user/match1
+      - matcher: match2
+        exclude: exclude2
+        download_path: /home/user/match2
+    validate_cert: false
+  - url: http://example.com/feed7
+    regexp:
+      - matcher: match3
+        exclude: exclude3
+        download_path: /home/user/match3
+      - matcher: match4
+        exclude: exclude4
+        download_path: /home/user/match4
+    validate_cert: false
+
+server:
+  host: transmission.lan
+  port: 80
+  rpc_path: /transmission/rpc

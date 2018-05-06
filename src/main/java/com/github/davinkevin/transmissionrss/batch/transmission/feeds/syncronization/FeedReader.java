@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.reader;
+package com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization;
 
 import com.github.davinkevin.transmissionrss.feeds.model.Feed;
 import com.github.davinkevin.transmissionrss.feeds.properties.FeedsProperty;

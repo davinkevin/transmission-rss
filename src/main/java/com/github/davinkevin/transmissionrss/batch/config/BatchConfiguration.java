@@ -1,9 +1,12 @@
 package com.github.davinkevin.transmissionrss.batch.config;
 
-import com.github.davinkevin.transmissionrss.batch.processor.FeedProcessor;
-import com.github.davinkevin.transmissionrss.batch.reader.FeedReader;
-import com.github.davinkevin.transmissionrss.batch.writer.AddTorrentWriter;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedProcessor;
+import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseReader;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedReader;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.AddTorrentWriter;
+import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseWriter;
 import com.github.davinkevin.transmissionrss.feeds.model.Feed;
+import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcherDTO;
 import com.github.davinkevin.transmissionrss.transmission.arguments.AddTorrentArguments;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +32,9 @@ public class BatchConfiguration {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job processFeedStep(Step processFeedsStep) {
-        return jobBuilderFactory.get("processFeedsStep")
-                .start(processFeedsStep)
+    public Job processFeedStep(Step processFeedsStep, Step synchronizeFeeds) {
+        return jobBuilderFactory.get("processFeedsJob")
+                .start(synchronizeFeeds)
                 .build();
     }
 
@@ -42,6 +45,16 @@ public class BatchConfiguration {
                 .reader(feedReader)
                 .processor(processor)
                 .writer(writer)
+                .build();
+    }
+
+    @Bean
+    public Step synchronizeFeeds(FeedDatabaseReader reader, FeedDatabaseWriter writer) {
+        return stepBuilderFactory.get("syncFeedsStep")
+                .<PatternMatcherDTO, PatternMatcherDTO>chunk(5)
+                .reader(reader)
+                .writer(writer)
+                .allowStartIfComplete(true)
                 .build();
     }
 }

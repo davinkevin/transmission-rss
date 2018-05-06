@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.writer;
+package com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization;
 
 import com.github.davinkevin.transmissionrss.transmission.arguments.AddTorrentArguments;
 import io.vavr.collection.List;

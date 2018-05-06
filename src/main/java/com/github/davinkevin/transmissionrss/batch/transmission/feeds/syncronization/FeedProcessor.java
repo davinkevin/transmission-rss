@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.processor;
+package com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization;
 
 import com.github.davinkevin.transmissionrss.feeds.model.Feed;
 import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcher;
@@ -30,27 +30,31 @@ public class FeedProcessor implements ItemProcessor<Feed, List<AddTorrentArgumen
     private final RssTorrentService rssTorrentService;
 
     @Override
-    public List<AddTorrentArguments> process(Feed feed) throws Exception {
+    public List<AddTorrentArguments> process(Feed feed) {
         List<RssItem> items = rssTorrentService
                 .parse(feed.getUrl())
                 .map(v -> v.getRootElement().getChild("channel").getChildren("item"))
                 .map(List::ofAll)
                 .getOrElse(List::empty)
-                .map(RssItem::toRssItem);
+                .map(RssItem::from);
 
         return feed.getRegexp()
                 .map(v -> Tuple(v, filterOn(v, items)))
-                .peek(v -> log.info("Found {} items with pattern {}", v._2().size(), v._1().getMatcher()))
+
                 .flatMap(this::toArguments);
     }
 
     private List<RssItem> filterOn(PatternMatcher p, List<RssItem> items) {
         Predicate<RssItem> include = (RssItem v) -> Pattern.compile(p.getMatcher()).asPredicate().test(v.getTitle());
         Predicate<RssItem> exclude = nonNull(p.getExclude())
-                ? (RssItem v) -> Pattern.compile(p.getExclude()).asPredicate().negate().test(v.getTitle())
-                : (RssItem v) -> true;
+                ? v -> Pattern.compile(p.getExclude()).asPredicate().negate().test(v.getTitle())
+                : v -> true;
 
-        return items.filter(include.and(exclude));
+        // items.forEach(i -> log.info(i.toString()));
+        List<RssItem> list = items.filter(include.and(exclude));
+        log.info("Found {} items with pattern {}", list.size(), p.getMatcher());
+        items.filter(include.and(exclude)).forEach(i -> log.info(i.toString()));
+        return list;
     }
 
     private List<AddTorrentByUrlArguments> toArguments(Tuple2<PatternMatcher, List<RssItem>> infos) {

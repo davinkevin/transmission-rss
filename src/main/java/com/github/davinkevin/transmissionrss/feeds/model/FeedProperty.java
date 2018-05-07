@@ -9,11 +9,11 @@ import java.net.URL;
  * Created by kevin on 08/04/2018
  */
 @Data
-public class Feed {
+public class FeedProperty {
     private URL url;
-    private List<PatternMatcher> regexp;
+    private List<PatternMatcherProperty> regexp;
 
-    public void setRegexp(java.util.List<PatternMatcher> regexp) {
+    public void setRegexp(java.util.List<PatternMatcherProperty> regexp) {
         this.regexp = List.ofAll(regexp);
     }
 }

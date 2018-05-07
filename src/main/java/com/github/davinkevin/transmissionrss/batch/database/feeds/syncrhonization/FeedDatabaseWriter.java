@@ -1,6 +1,6 @@
 package com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization;
 
-import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcherDTO;
+import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcher;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +16,12 @@ import static com.github.davinkevin.transmissionrss.tables.PatternMatcher.PATTER
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FeedDatabaseWriter implements ItemWriter<PatternMatcherDTO> {
+public class FeedDatabaseWriter implements ItemWriter<PatternMatcher> {
 
     private final DSLContext query;
 
     @Override
-    public void write(java.util.List<? extends PatternMatcherDTO> items) {
+    public void write(java.util.List<? extends PatternMatcher> items) {
 
         query.deleteFrom(PATTERN_MATCHER).execute();
 

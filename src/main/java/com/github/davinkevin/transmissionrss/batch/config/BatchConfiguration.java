@@ -5,8 +5,8 @@ import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonizatio
 import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedReader;
 import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.AddTorrentWriter;
 import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseWriter;
-import com.github.davinkevin.transmissionrss.feeds.model.Feed;
-import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcherDTO;
+import com.github.davinkevin.transmissionrss.feeds.model.FeedProperty;
+import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcher;
 import com.github.davinkevin.transmissionrss.transmission.arguments.AddTorrentArguments;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class BatchConfiguration {
     @Bean
     public Step processFeedsStep(FeedReader feedReader, FeedProcessor processor, AddTorrentWriter writer) {
         return stepBuilderFactory.get("processFeedsStep")
-                .<Feed, List<AddTorrentArguments>> chunk(1)
+                .<FeedProperty, List<AddTorrentArguments>> chunk(1)
                 .reader(feedReader)
                 .processor(processor)
                 .writer(writer)
@@ -51,7 +51,7 @@ public class BatchConfiguration {
     @Bean
     public Step synchronizeFeeds(FeedDatabaseReader reader, FeedDatabaseWriter writer) {
         return stepBuilderFactory.get("syncFeedsStep")
-                .<PatternMatcherDTO, PatternMatcherDTO>chunk(5)
+                .<PatternMatcher, PatternMatcher>chunk(5)
                 .reader(reader)
                 .writer(writer)
                 .allowStartIfComplete(true)

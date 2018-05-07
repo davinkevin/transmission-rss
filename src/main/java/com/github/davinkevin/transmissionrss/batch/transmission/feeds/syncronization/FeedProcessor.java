@@ -1,7 +1,7 @@
 package com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization;
 
-import com.github.davinkevin.transmissionrss.feeds.model.Feed;
-import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcher;
+import com.github.davinkevin.transmissionrss.feeds.model.FeedProperty;
+import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcherProperty;
 import com.github.davinkevin.transmissionrss.rss.model.RssItem;
 import com.github.davinkevin.transmissionrss.rss.service.RssTorrentService;
 import com.github.davinkevin.transmissionrss.transmission.arguments.AddTorrentArguments;
@@ -25,26 +25,26 @@ import static java.util.Objects.nonNull;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FeedProcessor implements ItemProcessor<Feed, List<AddTorrentArguments>> {
+public class FeedProcessor implements ItemProcessor<FeedProperty, List<AddTorrentArguments>> {
 
     private final RssTorrentService rssTorrentService;
 
     @Override
-    public List<AddTorrentArguments> process(Feed feed) {
+    public List<AddTorrentArguments> process(FeedProperty feedProperty) {
         List<RssItem> items = rssTorrentService
-                .parse(feed.getUrl())
+                .parse(feedProperty.getUrl())
                 .map(v -> v.getRootElement().getChild("channel").getChildren("item"))
                 .map(List::ofAll)
                 .getOrElse(List::empty)
                 .map(RssItem::from);
 
-        return feed.getRegexp()
+        return feedProperty.getRegexp()
                 .map(v -> Tuple(v, filterOn(v, items)))
 
                 .flatMap(this::toArguments);
     }
 
-    private List<RssItem> filterOn(PatternMatcher p, List<RssItem> items) {
+    private List<RssItem> filterOn(PatternMatcherProperty p, List<RssItem> items) {
         Predicate<RssItem> include = (RssItem v) -> Pattern.compile(p.getMatcher()).asPredicate().test(v.getTitle());
         Predicate<RssItem> exclude = nonNull(p.getExclude())
                 ? v -> Pattern.compile(p.getExclude()).asPredicate().negate().test(v.getTitle())
@@ -57,8 +57,8 @@ public class FeedProcessor implements ItemProcessor<Feed, List<AddTorrentArgumen
         return list;
     }
 
-    private List<AddTorrentByUrlArguments> toArguments(Tuple2<PatternMatcher, List<RssItem>> infos) {
-        PatternMatcher elem = infos._1();
+    private List<AddTorrentByUrlArguments> toArguments(Tuple2<PatternMatcherProperty, List<RssItem>> infos) {
+        PatternMatcherProperty elem = infos._1();
         return infos._2().map(v -> AddTorrentByUrlArguments.builder()
                 .paused(true)
                 .downloadDir(elem.getDownloadPath())

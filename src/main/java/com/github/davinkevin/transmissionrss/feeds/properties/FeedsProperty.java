@@ -1,6 +1,6 @@
 package com.github.davinkevin.transmissionrss.feeds.properties;
 
-import com.github.davinkevin.transmissionrss.feeds.model.Feed;
+import com.github.davinkevin.transmissionrss.feeds.model.FeedProperty;
 import io.vavr.collection.List;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties
 public class FeedsProperty {
-    @Getter List<Feed> feeds;
+    @Getter List<FeedProperty> feeds;
 
-    public void setFeeds(java.util.List<Feed> feeds) {
-        this.feeds = List.ofAll(feeds);
+    public void setFeeds(java.util.List<FeedProperty> feedProperties) {
+        this.feeds = List.ofAll(feedProperties);
     }
 }

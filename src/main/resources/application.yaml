@@ -1,14 +1,21 @@
 
 feeds:
-  - url: https://example/foo/bar
+  - url: https://www.morethan.tv/feeds.php?feed=torrents_tv&user=20449&auth=83ea8ef1bdc6d06249251ced5b4e9832&passkey=qiumbpxqq4yewatrenhig3l14low7q8g&authkey=p359szrnxz98djtropngmke8hngseg72
     regexp:
-      - matcher: .*Foo.*
-        exclude: .*123p.*|.*XL.*
+      - matcher: .*Just.*for.*Laughs.*
+        exclude: .*720p.*
         download_path: /data/Foo/Bar/
-      - matcher: .*Bar.*
+      - matcher: .*Dragon.*
         download_path: /data/Foo/AnotherBar
 
 server:
-  host: transmission.lan
+  host: transmission.dk.lan
   port: 80
   rpc_path: /transmission/rpc
+
+spring:
+  datasource:
+    url: jdbc:h2:/tmp/transmission-rss
+    username: user
+    password: password
+    schema: schema.sql

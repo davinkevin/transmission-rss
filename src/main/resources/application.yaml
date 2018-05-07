@@ -2,13 +2,20 @@
 feeds:
   - url: https://example/foo/bar
     regexp:
-      - matcher: .*Foo.*
-        exclude: .*123p.*|.*XL.*
+      - matcher: .*Just.*for.*Laughs.*
+        exclude: .*720p.*
         download_path: /data/Foo/Bar/
-      - matcher: .*Bar.*
+      - matcher: .*Dragon.*
         download_path: /data/Foo/AnotherBar
 
 server:
-  host: transmission.lan
+  host: transmission.dk.lan
   port: 80
   rpc_path: /transmission/rpc
+
+spring:
+  datasource:
+    url: jdbc:h2:/tmp/transmission-rss
+    username: user
+    password: password
+    schema: schema.sql

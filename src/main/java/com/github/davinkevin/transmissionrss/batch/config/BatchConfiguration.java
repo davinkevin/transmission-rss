@@ -1,13 +1,12 @@
 package com.github.davinkevin.transmissionrss.batch.config;
 
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedProcessor;
 import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseReader;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedReader;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.AddTorrentWriter;
 import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseWriter;
-import com.github.davinkevin.transmissionrss.feeds.model.FeedProperty;
-import com.github.davinkevin.transmissionrss.feeds.model.PatternMatcher;
-import com.github.davinkevin.transmissionrss.transmission.arguments.AddTorrentArguments;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedProcessor;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedReader;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.RssItemToDatabaseWriter;
+import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.model.ItemFetchingSpecification;
+import com.github.davinkevin.transmissionrss.rss.model.RssItem;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,23 +34,25 @@ public class BatchConfiguration {
     public Job processFeedStep(Step processFeedsStep, Step synchronizeFeeds) {
         return jobBuilderFactory.get("processFeedsJob")
                 .start(synchronizeFeeds)
+                .next(processFeedsStep)
                 .build();
     }
 
     @Bean
-    public Step processFeedsStep(FeedReader feedReader, FeedProcessor processor, AddTorrentWriter writer) {
+    public Step processFeedsStep(FeedReader feedReader, FeedProcessor processor, RssItemToDatabaseWriter writer) {
         return stepBuilderFactory.get("processFeedsStep")
-                .<FeedProperty, List<AddTorrentArguments>> chunk(1)
+                .<ItemFetchingSpecification, List<RssItem>> chunk(1)
                 .reader(feedReader)
                 .processor(processor)
                 .writer(writer)
+                .allowStartIfComplete(true)
                 .build();
     }
 
     @Bean
     public Step synchronizeFeeds(FeedDatabaseReader reader, FeedDatabaseWriter writer) {
         return stepBuilderFactory.get("syncFeedsStep")
-                .<PatternMatcher, PatternMatcher>chunk(5)
+                .<ItemFetchingSpecification, ItemFetchingSpecification>chunk(5)
                 .reader(reader)
                 .writer(writer)
                 .allowStartIfComplete(true)

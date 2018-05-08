@@ -1,6 +1,6 @@
 package com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization;
 
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.model.ItemFetchingSpecification;
+import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.model.ItemFetchingSpecification;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,10 +2,10 @@ package com.github.davinkevin.transmissionrss.batch.config;
 
 import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseReader;
 import com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization.FeedDatabaseWriter;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedProcessor;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.FeedReader;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.RssItemToDatabaseWriter;
-import com.github.davinkevin.transmissionrss.batch.transmission.feeds.syncronization.model.ItemFetchingSpecification;
+import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.FeedProcessor;
+import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.FeedReader;
+import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.RssItemToDatabaseWriter;
+import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.model.ItemFetchingSpecification;
 import com.github.davinkevin.transmissionrss.rss.model.RssItem;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;

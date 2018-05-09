@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.database.items.syncronization.model;
+package com.github.davinkevin.transmissionrss.batch.synchronization.items.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

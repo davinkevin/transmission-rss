@@ -1,6 +1,6 @@
-package com.github.davinkevin.transmissionrss.batch.database.feeds.syncrhonization;
+package com.github.davinkevin.transmissionrss.batch.synchronization.feeds;
 
-import com.github.davinkevin.transmissionrss.batch.database.items.syncronization.model.ItemFetchingSpecification;
+import com.github.davinkevin.transmissionrss.batch.synchronization.items.model.ItemFetchingSpecification;
 import com.github.davinkevin.transmissionrss.feeds.properties.FeedsProperty;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;

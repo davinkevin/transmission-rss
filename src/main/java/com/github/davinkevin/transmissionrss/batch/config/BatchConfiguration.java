@@ -1,12 +1,12 @@
 package com.github.davinkevin.transmissionrss.batch.config;
 
-import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.FeedDatabaseReader;
-import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.FeedDatabaseWriter;
+import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification.FeedsSpecificationDatabaseWriter;
+import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification.FeedsSpecificationReader;
+import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification.model.FeedSpecification;
 import com.github.davinkevin.transmissionrss.batch.synchronization.items.FeedProcessor;
-import com.github.davinkevin.transmissionrss.batch.synchronization.items.FeedReader;
+import com.github.davinkevin.transmissionrss.batch.synchronization.items.FeedUrlReader;
 import com.github.davinkevin.transmissionrss.batch.synchronization.items.RssItemToDatabaseWriter;
-import com.github.davinkevin.transmissionrss.batch.synchronization.items.model.ItemFetchingSpecification;
-import com.github.davinkevin.transmissionrss.rss.model.RssItem;
+import com.github.davinkevin.transmissionrss.batch.synchronization.items.model.RssItemsWithFeedUrl;
 import io.vavr.collection.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,8 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.net.URL;
 
 /**
  * Created by kevin on 08/04/2018
@@ -31,18 +33,18 @@ public class BatchConfiguration {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job processFeedStep(Step processFeedsStep, Step synchronizeFeeds) {
-        return jobBuilderFactory.get("processFeedsJob")
-                .start(synchronizeFeeds)
-                .next(processFeedsStep)
+    public Job processFeedStep(Step loadRssItemsToDatabase, Step loadFeedSpecificationToDatabase) {
+        return jobBuilderFactory.get("syncToTransmission")
+                .start(loadFeedSpecificationToDatabase)
+                .next(loadRssItemsToDatabase)
                 .build();
     }
 
     @Bean
-    public Step processFeedsStep(FeedReader feedReader, FeedProcessor processor, RssItemToDatabaseWriter writer) {
-        return stepBuilderFactory.get("processFeedsStep")
-                .<ItemFetchingSpecification, List<RssItem>> chunk(1)
-                .reader(feedReader)
+    public Step loadRssItemsToDatabase(FeedUrlReader feedUrlReader, FeedProcessor processor, RssItemToDatabaseWriter writer) {
+        return stepBuilderFactory.get("loadRssItemsToDatabase")
+                .<URL, List<RssItemsWithFeedUrl>> chunk(1)
+                .reader(feedUrlReader)
                 .processor(processor)
                 .writer(writer)
                 .allowStartIfComplete(true)
@@ -50,9 +52,9 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step synchronizeFeeds(FeedDatabaseReader reader, FeedDatabaseWriter writer) {
-        return stepBuilderFactory.get("syncFeedsStep")
-                .<ItemFetchingSpecification, ItemFetchingSpecification>chunk(5)
+    public Step loadFeedSpecificationToDatabase(FeedsSpecificationReader reader, FeedsSpecificationDatabaseWriter writer) {
+        return stepBuilderFactory.get("loadFeedSpecificationToDatabase")
+                .<FeedSpecification, FeedSpecification>chunk(5)
                 .reader(reader)
                 .writer(writer)
                 .allowStartIfComplete(true)

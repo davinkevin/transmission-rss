@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.synchronization.items.model;
+package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.net.URL;
  */
 @Data
 @Builder
-public class ItemFetchingSpecification {
+public class FeedSpecification {
     private URL url;
     private String matcher;
     private String exclude;

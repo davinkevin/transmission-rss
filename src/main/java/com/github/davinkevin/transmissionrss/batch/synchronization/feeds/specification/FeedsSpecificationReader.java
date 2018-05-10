@@ -1,6 +1,6 @@
-package com.github.davinkevin.transmissionrss.batch.synchronization.feeds;
+package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification;
 
-import com.github.davinkevin.transmissionrss.batch.synchronization.items.model.ItemFetchingSpecification;
+import com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification.model.FeedSpecification;
 import com.github.davinkevin.transmissionrss.feeds.properties.FeedsProperty;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -15,14 +15,14 @@ import static io.vavr.API.Tuple;
  */
 @Slf4j
 @Component
-public class FeedDatabaseReader implements ItemReader<ItemFetchingSpecification> {
+public class FeedsSpecificationReader implements ItemReader<FeedSpecification> {
 
-    private List<ItemFetchingSpecification> pm;
+    private List<FeedSpecification> pm;
 
-    public FeedDatabaseReader(FeedsProperty feedsProperty) {
+    public FeedsSpecificationReader(FeedsProperty feedsProperty) {
         pm = feedsProperty.getFeeds()
                 .map(f -> Tuple(f, f.getRegexp()))
-                .flatMap(t -> t._2().map(v -> ItemFetchingSpecification.builder()
+                .flatMap(t -> t._2().map(v -> FeedSpecification.builder()
                         .url(t._1().getUrl())
                         .downloadPath(v.getDownloadPath())
                         .exclude(v.getExclude())
@@ -33,13 +33,15 @@ public class FeedDatabaseReader implements ItemReader<ItemFetchingSpecification>
     }
 
     @Override
-    public ItemFetchingSpecification read() {
+    public FeedSpecification read() {
         if (pm.isEmpty()) {
             return null;
         }
 
-        Tuple2<ItemFetchingSpecification, List<ItemFetchingSpecification>> p = pm.pop2();
+        Tuple2<FeedSpecification, List<FeedSpecification>> p = pm.pop2();
         pm = p._2();
+
+        log.info("Push value {}", p._1());
 
         return p._1();
     }

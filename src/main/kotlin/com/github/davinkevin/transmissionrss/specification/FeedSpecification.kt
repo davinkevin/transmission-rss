@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification
+package com.github.davinkevin.transmissionrss.specification
 
 import java.net.URL
 

@@ -1,10 +1,9 @@
 package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.items
 
 import com.github.davinkevin.transmissionrss.Tables.RSS_ITEM
-import com.github.davinkevin.transmissionrss.rss.RssItem
 import com.github.davinkevin.transmissionrss.tables.records.RssItemRecord
 import org.jooq.DSLContext
-import org.jooq.InsertValuesStep5
+import org.jooq.InsertValuesStep6
 import org.springframework.batch.item.ItemWriter
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -24,10 +23,11 @@ class RssItemToDatabaseWriter(val query: DSLContext): ItemWriter<FeedWithItems> 
         query.batch(inserts).execute()
     }
 
-    private fun toInsertQuery(it: Pair<URL, RssItem>):  InsertValuesStep5<RssItemRecord, String, String, String, OffsetDateTime, String> {
+    private fun toInsertQuery(it: Pair<URL, ItemsWithStatus>): InsertValuesStep6<RssItemRecord, String, String, String, OffsetDateTime, String, String> {
             val rss = it.second
             val url = it.first
-            return query.insertInto(RSS_ITEM, RSS_ITEM.TITLE, RSS_ITEM.GUID, RSS_ITEM.LINK, RSS_ITEM.PUB_DATE, RSS_ITEM.FROM_FEED)
-                    .values(rss.title, rss.guid, rss.link.toString(), rss.pubDate.toOffsetDateTime(), url.toString())
+        val r = RSS_ITEM
+        return query.insertInto(r, r.TITLE, r.GUID, r.LINK, r.PUB_DATE, r.FROM_FEED, r.STATUS)
+                    .values(rss.title, rss.guid, rss.link.toString(), rss.pubDate.toOffsetDateTime(), url.toString(), rss.status.name)
     }
 }

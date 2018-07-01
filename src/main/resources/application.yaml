@@ -2,10 +2,10 @@
 feeds:
   - url: https://example/foo/bar
     regexp:
-      - matcher: .*Just.*for.*Laughs.*
-        exclude: .*720p.*
+      - matcher: .*Taken.*
         download_path: /data/Foo/Bar/
-      - matcher: .*Dragon.*
+      - matcher: .*Duck.*
+        exclude: .*SD.*|.*720p.*
         download_path: /data/Foo/AnotherBar
 
 server:

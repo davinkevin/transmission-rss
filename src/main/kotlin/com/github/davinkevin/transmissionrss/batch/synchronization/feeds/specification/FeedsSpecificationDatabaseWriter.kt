@@ -1,5 +1,6 @@
 package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification
 
+import com.github.davinkevin.transmissionrss.specification.FeedSpecification
 import com.github.davinkevin.transmissionrss.tables.PatternMatcher.PATTERN_MATCHER
 import com.github.davinkevin.transmissionrss.tables.records.PatternMatcherRecord
 import org.jooq.DSLContext

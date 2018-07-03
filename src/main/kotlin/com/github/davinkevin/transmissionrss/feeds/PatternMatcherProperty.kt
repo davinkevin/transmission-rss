@@ -1,4 +1,4 @@
-package com.github.davinkevin.transmissionrss.feeds.model
+package com.github.davinkevin.transmissionrss.feeds
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

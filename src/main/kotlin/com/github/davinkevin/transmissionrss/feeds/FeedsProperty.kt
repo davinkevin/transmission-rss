@@ -1,6 +1,5 @@
-package com.github.davinkevin.transmissionrss.feeds.properties
+package com.github.davinkevin.transmissionrss.feeds
 
-import com.github.davinkevin.transmissionrss.feeds.model.FeedProperty
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 

@@ -1,6 +1,6 @@
 package com.github.davinkevin.transmissionrss.batch.synchronization.feeds.specification
 
-import com.github.davinkevin.transmissionrss.feeds.properties.FeedsProperty
+import com.github.davinkevin.transmissionrss.feeds.FeedsProperty
 import com.github.davinkevin.transmissionrss.specification.FeedSpecification
 import org.springframework.batch.item.ItemReader
 import org.springframework.stereotype.Component

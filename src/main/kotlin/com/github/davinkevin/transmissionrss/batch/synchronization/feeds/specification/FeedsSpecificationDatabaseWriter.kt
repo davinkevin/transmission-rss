@@ -10,14 +10,16 @@ import org.springframework.stereotype.Component
 @Component
 class FeedsSpecificationDatabaseWriter(val query: DSLContext) : ItemWriter<FeedSpecification> {
 
-    override fun write(items: MutableList<out FeedSpecification>?) {
 
-        query.deleteFrom<PatternMatcherRecord>(PATTERN_MATCHER).execute()
+    override fun write(items: MutableList<out FeedSpecification>?) {
+        val pm = PATTERN_MATCHER
+
+        query.deleteFrom<PatternMatcherRecord>(pm).execute()
 
         val insertion = items?.map {
             query
-                    .insertInto(PATTERN_MATCHER, PATTERN_MATCHER.URL, PATTERN_MATCHER.MATCHER, PATTERN_MATCHER.EXCLUDE, PATTERN_MATCHER.DOWNLOAD_PATH)
-                    .values(it.url.toString(), it.matcher, it.exclude, it.downloadPath)
+                    .insertInto(pm, pm.URL, pm.MATCHER, pm.EXCLUDE, pm.DOWNLOAD_PATH, pm.MIN_INTERVAL)
+                    .values(it.url.toString(), it.matcher, it.exclude, it.downloadPath, it.minInterval.toString())
         }
 
         query.batch(insertion).execute()

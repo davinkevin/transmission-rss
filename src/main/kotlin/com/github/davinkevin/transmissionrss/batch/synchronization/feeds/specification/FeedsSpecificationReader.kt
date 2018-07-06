@@ -20,7 +20,8 @@ class FeedsSpecificationReader(feedsProperty: FeedsProperty) : ItemReader<FeedSp
                                     url = v.first.url!!,
                                     matcher = r.matcher!!,
                                     exclude = r.exclude,
-                                    downloadPath = r.downloadPath!!
+                                    downloadPath = r.downloadPath!!,
+                                    minInterval = r.minInterval
                             )
                         }
                 }

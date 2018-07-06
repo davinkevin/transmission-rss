@@ -4,6 +4,7 @@ feeds:
     regexp:
       - matcher: .*Taken.*
         download_path: /data/Foo/Bar/
+        min_interval: 7d
       - matcher: .*Duck.*
         exclude: .*SD.*|.*720p.*
         download_path: /data/Foo/AnotherBar

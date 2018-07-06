@@ -7,6 +7,7 @@ import org.jooq.DSLContext
 import org.springframework.batch.item.ItemReader
 import org.springframework.stereotype.Component
 import java.net.URL
+import java.time.Duration
 
 @Component
 class PatternMatcherReader(val query: DSLContext): ItemReader<FeedSpecification> {
@@ -23,12 +24,13 @@ class PatternMatcherReader(val query: DSLContext): ItemReader<FeedSpecification>
     }
 
     private fun readItems() = query
-            .select(PATTERN_MATCHER.URL, PATTERN_MATCHER.MATCHER, PATTERN_MATCHER.EXCLUDE,PATTERN_MATCHER.DOWNLOAD_PATH)
+            .select(PATTERN_MATCHER.URL, PATTERN_MATCHER.MATCHER, PATTERN_MATCHER.EXCLUDE,PATTERN_MATCHER.DOWNLOAD_PATH, PATTERN_MATCHER.MIN_INTERVAL)
             .from(PATTERN_MATCHER)
             .fetch { FeedSpecification(
                     url = URL(it[PATTERN_MATCHER.URL]),
                     matcher = it[PATTERN_MATCHER.MATCHER],
                     exclude = it[PATTERN_MATCHER.EXCLUDE],
-                    downloadPath = it[PATTERN_MATCHER.DOWNLOAD_PATH]
+                    downloadPath = it[PATTERN_MATCHER.DOWNLOAD_PATH],
+                    minInterval = Duration.parse(it[PATTERN_MATCHER.MIN_INTERVAL])
             )}
 }

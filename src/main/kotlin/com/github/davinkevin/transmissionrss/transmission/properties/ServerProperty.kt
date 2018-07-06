@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties("server")
-data class ServerProperty(
-        var host: String,
-        var port: Integer,
-        var rpcPath: String
-)
+class ServerProperty {
+    lateinit var host: String
+    lateinit var rpcPath: String
+    var port: Int = 0
+}
